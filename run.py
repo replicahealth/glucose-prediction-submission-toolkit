@@ -43,11 +43,31 @@ def validate_predictions_format(predictions_df, template_df):
                     break
     
     pred_columns = ['pred_30', 'pred_60', 'pred_90', 'pred_120']
+    populated_cols = []
+    has_partial = False
     for col in pred_columns:
-        if col in predictions_df.columns:
-            if predictions_df[col].isna().any():
-                errors.append(f"Column '{col}' contains missing values (NaN)")
-    
+        if col not in predictions_df.columns:
+            continue
+        n_total = len(predictions_df)
+        n_nan = int(predictions_df[col].isna().sum())
+        if n_nan == 0:
+            populated_cols.append(col)
+        elif n_nan == n_total:
+            continue
+        else:
+            has_partial = True
+            errors.append(
+                f"Column '{col}' is partially populated "
+                f"({n_nan:,} of {n_total:,} values are NaN). "
+                f"Each prediction column must be either fully populated or left entirely empty."
+            )
+
+    if not missing_cols and not populated_cols and not has_partial:
+        errors.append(
+            "No prediction columns are populated. "
+            "You must fully populate at least one of: pred_30, pred_60, pred_90, pred_120."
+        )
+
     if errors:
         return False, "\n".join(errors)
     return True, None
@@ -76,10 +96,13 @@ def calculate_metrics(predictions_df, targets_df, horizon='60'):
             
             if pred_col not in predictions_df.columns or target_col not in targets_df.columns:
                 continue
-            
+
+            if predictions_df[pred_col].isna().all():
+                continue
+
             pred_values = predictions_df[pred_col].values
             target_values = targets_df[target_col].values
-            
+
             # Store for overall calculation
             all_preds.extend(pred_values)
             all_targets.extend(target_values)
@@ -123,7 +146,13 @@ def calculate_metrics(predictions_df, targets_df, horizon='60'):
             raise ValueError(f"Prediction column '{pred_col}' not found")
         if target_col not in targets_df.columns:
             raise ValueError(f"Target column '{target_col}' not found")
-        
+
+        if predictions_df[pred_col].isna().all():
+            raise ValueError(
+                f"Cannot evaluate horizon {horizon}: column '{pred_col}' is empty in your predictions. "
+                f"Choose a horizon you've populated, or use 'all' to evaluate every populated horizon."
+            )
+
         pred_values = predictions_df[pred_col].values
         target_values = targets_df[target_col].values
         
@@ -206,15 +235,23 @@ def main():
         print("\n⚠️ Critical Requirements:")
         print("• Exact Row Matching: Your submission must have the exact same rows (id, source_file, date) as the template")
         print("• Same Order: Rows must be in identical order to the template file")
-        print("• Fill All Horizons: Provide predictions for pred_30, pred_60, pred_90, and pred_120 columns")
-        print("• No Missing Values: All prediction columns must be filled (no NaN values)")
+        print("• All Columns Present: Include all four columns — pred_30, pred_60, pred_90, pred_120")
+        print("• At Least One Horizon Populated: Fully populate at least one of the four prediction columns")
+        print("• All-or-Nothing per Column: Each populated column must have NO NaN values; horizons you skip must be left entirely empty (all NaN)")
         print("• No Extra/Missing Rows: Do not add or remove any rows from the template")
         sys.exit(1)
-    
+
     print("✅ Format validation passed!")
+    populated_pred_cols = [c for c in ['pred_30', 'pred_60', 'pred_90', 'pred_120']
+                           if c in predictions_df.columns and not predictions_df[c].isna().any()]
+    print(f"   Populated horizons: {', '.join(populated_pred_cols)}")
     
     print(f"\n📊 Calculating metrics for horizon: {horizon}...")
-    metrics = calculate_metrics(predictions_df, targets_df, horizon)
+    try:
+        metrics = calculate_metrics(predictions_df, targets_df, horizon)
+    except ValueError as e:
+        print(f"\n❌ {e}")
+        sys.exit(1)
     
     print("\n" + "="*60)
     print("                    EVALUATION RESULTS")
