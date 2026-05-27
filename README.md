@@ -31,7 +31,8 @@ The steps below are for submitting to the **live leaderboard**. Steps for the **
    - Be in parquet format
    - Have the exact same rows and columns as `data/template.parquet` (same `id`, `source_file`, and `date` combinations)
    - Keep rows in the same order as the template
-   - Include all prediction columns with no missing values
+   - Include all four prediction columns (`pred_30`, `pred_60`, `pred_90`, `pred_120`)
+   - Fully populate **at least one** prediction column. You can compete on a single horizon or any subset. Each populated column must contain no missing values, and any horizons you skip must be left **entirely empty** (all NaN). Partially filled columns are rejected.
 
    **Preview of submission format:**
 
