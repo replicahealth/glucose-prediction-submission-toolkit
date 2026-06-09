@@ -6,15 +6,52 @@ This repository contains the evaluation script for the MetaboNet glucose predict
 
 ## Installation
 
-1. Install the required dependencies:
+> ⚠️ **Read this first — this repo uses [Git LFS](https://git-lfs.com) for the parquet files in `data/`.**
+> If you clone without Git LFS installed, you will get tiny pointer files (a few hundred bytes) instead of the actual data, and `run.py` will not work.
+
+### Step 1 — Install Git LFS (once per machine)
+
+Install the Git LFS client:
+
+- **macOS:** `brew install git-lfs`
+- **Ubuntu / Debian:** `sudo apt-get install git-lfs`
+- **Windows / other:** download from [git-lfs.com](https://git-lfs.com)
+
+Then register it with your Git install (only needed once per machine):
+
+```bash
+git lfs install
+```
+
+### Step 2 — Clone the repo
+
+With LFS installed, a normal `git clone` will automatically download the real parquet files:
 
 ```bash
 git clone https://github.com/replicahealth/metabonet-glucose.git
 cd metabonet-glucose
+```
+
+**Sanity check:** `ls -lh data/` should show `template.parquet` at ~19 MB and `targets.parquet` at ~33 MB. If they're only a few hundred bytes, you got pointer files — see "Already cloned without LFS?" below.
+
+### Step 3 — Install Python dependencies
+
+```bash
 uv venv .env
 source .env/bin/activate  # On Windows: .env\Scripts\activate
 uv pip install -r requirements.txt
 ```
+
+### Already cloned without LFS?
+
+Don't re-clone. Install Git LFS as in Step 1, then from inside the repo run:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+This replaces the pointer files with the actual parquet contents in place.
 
 
 ## Quick Start
