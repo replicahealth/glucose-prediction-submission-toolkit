@@ -71,6 +71,8 @@ The steps below are for submitting to the **live leaderboard**. Steps for the **
    - Include all four prediction columns (`pred_30`, `pred_60`, `pred_90`, `pred_120`)
    - Fully populate **at least one** prediction column. You can compete on a single horizon or any subset. Each populated column must contain no missing values, and any horizons you skip must be left **entirely empty** (all NaN). Partially filled columns are rejected.
 
+   For details on what's in `data/` and how the test set was built, see [`data/README.md`](data/README.md).
+
    **Preview of submission format:**
 
    | id | source_file | date                | pred_30 | pred_60 | pred_90 | pred_120 |
