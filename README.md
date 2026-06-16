@@ -1,6 +1,6 @@
-# MetaboNet Glucose Prediction Submission Kit
+# MetaboNet-Glucose Prediction Submission Kit
 
-This repository contains the evaluation script for the MetaboNet glucose prediction benchmark. 
+This repository contains the evaluation script for the MetaboNet-Glucose prediction benchmark. 
 
 [🏆 View Leaderboard 🏆](https://huggingface.co/spaces/MetabonetBench/leaderboard-space)
 
