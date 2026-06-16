@@ -1,4 +1,4 @@
-# MetaboNet-Glucose Prediction Submission Kit
+# MetaboNet-Glucose Prediction Submission ToolKit
 
 This repository contains the evaluation script for the MetaboNet-Glucose prediction benchmark. 
 
