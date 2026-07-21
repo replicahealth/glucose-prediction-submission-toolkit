@@ -1,4 +1,4 @@
-# MetaboNet-Glucose Prediction Submission ToolKit
+# Glucose Prediction Submission ToolKit
 
 This repository contains the evaluation script for the MetaboNet-Glucose prediction benchmark. 
 
@@ -28,8 +28,8 @@ git lfs install
 With LFS installed, a normal `git clone` will automatically download the real parquet files:
 
 ```bash
-git clone https://github.com/replicahealth/metabonet-glucose.git
-cd metabonet-glucose
+git clone https://github.com/replicahealth/glucose-prediction-submission-toolkit.git
+cd glucose-prediction-submission-toolkit
 ```
 
 **Sanity check:** `ls -lh data/` should show `template.parquet` at ~19 MB and `targets.parquet` at ~33 MB. If they're only a few hundred bytes, you got pointer files — see "Already cloned without LFS?" below.
