@@ -59,8 +59,12 @@ def calculate_rmse(pred, true):
     return round(float(np.sqrt(np.mean((pred - true) ** 2))), 2)
 
 
-def calculate_mae(pred, true):
-    """Returns the Mean Absolute Error, rounded to 2 decimal places."""
+def calculate_mard(pred, true):
+    """Returns the Mean Absolute Relative Difference (%), rounded to 2 decimal places."""
     pred = np.asarray(pred, dtype=float)
     true = np.asarray(true, dtype=float)
-    return round(float(np.mean(np.abs(pred - true))), 2)
+    # Exclude any zero reference values to avoid division by zero.
+    valid = true != 0
+    if not np.any(valid):
+        return 0.0
+    return round(float(np.mean(np.abs(pred[valid] - true[valid]) / true[valid]) * 100), 2)

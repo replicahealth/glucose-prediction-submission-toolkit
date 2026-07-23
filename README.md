@@ -107,14 +107,14 @@ The steps below are for submitting to the **live leaderboard**. Steps for the **
    ============================================================
 
    📈 60 Min Ahead Predictions:
-      RMSE: 57.24 mg/dL
-      MAE:  44.28 mg/dL
+      RMSE: 53.17 mg/dL
+      MARD: 33.51 %
 
       DTS Error Grid Zones:
-      • Zone A (Clinically Accurate):     37.5%
-      • Zone B (Benign Errors):           49.8%
-      • Zone C (Overcorrection):          11.6%
-      • Zone D (Failure to Detect):       1.1%
+      • Zone A (Clinically Accurate):     38.2%
+      • Zone B (Benign Errors):           47.3%
+      • Zone C (Overcorrection):          13.5%
+      • Zone D (Failure to Detect):       0.9%
       • Zone E (Erroneous Treatment):     0.0%
 
    ============================================================
@@ -136,7 +136,7 @@ https://huggingface.co/spaces/MetabonetBench/leaderboard-space
 
 - `run.py` - Validation and evaluation script
 - `inspect_data.py` - Helper to print the format of `data/template.parquet` and `data/targets.parquet`
-- `metrics.py` - Metric calculation functions (RMSE, MAE, DTS Error Grid)
+- `metrics.py` - Metric calculation functions (RMSE, MARD, DTS Error Grid)
 - `data/template.parquet` - Template showing required format for submissions
 - `data/targets.parquet` - Ground truth values for evaluation
 

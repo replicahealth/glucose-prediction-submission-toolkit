@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import sys
 from pathlib import Path
-from metrics import calculate_dts_error_grid, calculate_rmse, calculate_mae
+from metrics import calculate_dts_error_grid, calculate_rmse, calculate_mard
 
 
 def validate_predictions_format(predictions_df, template_df):
@@ -109,12 +109,12 @@ def calculate_metrics(predictions_df, targets_df, horizon='60'):
             
             # Calculate individual horizon metrics
             rmse = calculate_rmse(pred_values, target_values)
-            mae = calculate_mae(pred_values, target_values)
+            mard = calculate_mard(pred_values, target_values)
             dts_zones = calculate_dts_error_grid(pred_values, target_values)
-            
+
             results[f'{h}_min'] = {
                 'RMSE': rmse,
-                'MAE': mae,
+                'MARD': mard,
                 'DTS_A': dts_zones['DTS_A_ZONE_PERCENT'],
                 'DTS_B': dts_zones['DTS_B_ZONE_PERCENT'],
                 'DTS_C': dts_zones['DTS_C_ZONE_PERCENT'],
@@ -125,12 +125,12 @@ def calculate_metrics(predictions_df, targets_df, horizon='60'):
         # Calculate overall metrics
         if all_preds and all_targets:
             overall_rmse = calculate_rmse(all_preds, all_targets)
-            overall_mae = calculate_mae(all_preds, all_targets)
+            overall_mard = calculate_mard(all_preds, all_targets)
             overall_dts = calculate_dts_error_grid(all_preds, all_targets)
-            
+
             results['overall'] = {
                 'RMSE': overall_rmse,
-                'MAE': overall_mae,
+                'MARD': overall_mard,
                 'DTS_A': overall_dts['DTS_A_ZONE_PERCENT'],
                 'DTS_B': overall_dts['DTS_B_ZONE_PERCENT'],
                 'DTS_C': overall_dts['DTS_C_ZONE_PERCENT'],
@@ -157,12 +157,12 @@ def calculate_metrics(predictions_df, targets_df, horizon='60'):
         target_values = targets_df[target_col].values
         
         rmse = calculate_rmse(pred_values, target_values)
-        mae = calculate_mae(pred_values, target_values)
+        mard = calculate_mard(pred_values, target_values)
         dts_zones = calculate_dts_error_grid(pred_values, target_values)
-        
+
         results[f'{horizon}_min'] = {
             'RMSE': rmse,
-            'MAE': mae,
+            'MARD': mard,
             'DTS_A': dts_zones['DTS_A_ZONE_PERCENT'],
             'DTS_B': dts_zones['DTS_B_ZONE_PERCENT'],
             'DTS_C': dts_zones['DTS_C_ZONE_PERCENT'],
@@ -265,7 +265,7 @@ def main():
             print(f"\n📈 {horizon_key.replace('_', ' ').title()} Ahead Predictions:")
         
         print(f"   RMSE: {horizon_metrics['RMSE']:.2f} mg/dL")
-        print(f"   MAE:  {horizon_metrics['MAE']:.2f} mg/dL")
+        print(f"   MARD: {horizon_metrics['MARD']:.2f} %")
         print(f"\n   DTS Error Grid Zones:")
         print(f"   • Zone A (Clinically Accurate):     {horizon_metrics['DTS_A']:.1f}%")
         print(f"   • Zone B (Benign Errors):           {horizon_metrics['DTS_B']:.1f}%")
